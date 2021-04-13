@@ -1,11 +1,9 @@
 package com.customermanagementsystem.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+
 
 @Entity
 @Getter
@@ -18,7 +16,9 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer customerId;
+    @NonNull
     private String customerName;
+    @NonNull
     private String mobileNumber;
     private String emailId;
 }

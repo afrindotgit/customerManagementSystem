@@ -20,13 +20,13 @@ import java.util.Map;
 @MapperScan(basePackages = "com.customermanagementsystem.repository")
 public class MyBatisConfig {
 
-    @Primary
     @Bean("dataSourceA")
     @ConfigurationProperties(prefix = "spring.datasource-a")
     public DataSource dataSourceA() {
         return DataSourceBuilder.create().build();
     }
 
+    @Primary
     @Bean("dataSourceB")
     @ConfigurationProperties(prefix = "spring.datasource-b")
     public DataSource dataSourceB() {
