@@ -20,13 +20,13 @@ import java.util.Map;
 @MapperScan(basePackages = "com.customermanagementsystem.repository")
 public class MyBatisConfig {
 
+    @Primary
     @Bean("dataSourceA")
     @ConfigurationProperties(prefix = "spring.datasource-a")
     public DataSource dataSourceA() {
         return DataSourceBuilder.create().build();
     }
 
-    @Primary
     @Bean("dataSourceB")
     @ConfigurationProperties(prefix = "spring.datasource-b")
     public DataSource dataSourceB() {
@@ -48,14 +48,16 @@ public class MyBatisConfig {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") MultiRoutingDataSource dynamicDataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(@Qualifier("dynamicDataSource") MultiRoutingDataSource dynamicDataSource)
+            throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dynamicDataSource);
         return factoryBean.getObject();
     }
 
     @Bean
-    public DataSourceTransactionManager transactionManager(MultiRoutingDataSource dataSource) throws Exception {
+    public DataSourceTransactionManager transactionManager(MultiRoutingDataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
     }
+
 }

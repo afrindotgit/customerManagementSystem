@@ -9,5 +9,5 @@ public class RequestDTO {
 
     private String customerName;
     private String mobileNumber;
-    private String emailId;
+    private String country;
 }
