@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customermanagementsystem
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: customermanagementsystem
+  template:
+    metadata:
+      labels:
+        app: customermanagementsystem
+    spec:
+      containers:
+      - env:
+        - name: SPRING_DATASOURCE_PASSWORD
+          value: root
+        - name: SPRING_DATASOURCE_URL
+          value: jdbc:postgresql://postgresql:5432/testdb?createDatabaseIfNotExist=true
+        - name: SPRING_DATASOURCE_USERNAME
+          value: afi
+        image: afrindotimage/customer-management-systems:0.0.1-SNAPSHOT
+        imagePullPolicy: Never
+        name: customermanagementsystem
+        ports:
+        - containerPort: 8081
+      restartPolicy: Always
+      volumes: null

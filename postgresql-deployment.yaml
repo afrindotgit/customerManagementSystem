@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    database: postgresql
+  name: postgresql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      database: postgresql
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        database: postgresql
+    spec:
+      containers:
+      - env:
+        - name: POSTGRES_DB
+          value: testdb
+        - name: POSTGRES_PASSWORD
+          value: root
+        - name: POSTGRES_USER
+          value: afi
+        image: postgres:13.2
+        name: postgresql
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - mountPath: /infile
+          name: psql-pvc
+        - mountPath: /var/lib/postgresql/data
+          name: pg-data
+      restartPolicy: Always
+      volumes:
+      - name: psql-pvc
+        persistentVolumeClaim:
+          claimName: psql-pvc
+      - name: pg-data
+        persistentVolumeClaim:
+          claimName: pg-data
