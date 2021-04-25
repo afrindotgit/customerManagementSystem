@@ -28,17 +28,19 @@ public class CustomerServiceImplTest {
     private CustomerServiceImpl underTest;
 
     private String defaultDataSource;
+    private RequestDTO requestDTO;
 
     @BeforeEach
     void setUp() {
         defaultDataSource = "datasource_a";
+        requestDTO = RequestDTO.builder().customerName("Test").mobileNumber("08809989878").build();
     }
 
     @Test
     void givenInvalidMobileNumber_whenSaveCustomer_thenReturnError() throws CustomerException {
 
         //GIVEN
-        RequestDTO requestDTO = RequestDTO.builder().customerName("Test").mobileNumber("08808888").build();
+        requestDTO = RequestDTO.builder().customerName("Test").mobileNumber("08808888").build();
 
         //THEN
         Exception exception = Assertions.assertThrows(CustomerException.class,
@@ -49,9 +51,6 @@ public class CustomerServiceImplTest {
 
     @Test
     void givenInvalidDataSource_whenSaveCustomer_thenReturnError() throws CustomerException {
-
-        //GIVEN
-        RequestDTO requestDTO = RequestDTO.builder().customerName("Test").mobileNumber("08809989878").build();
 
         //THEN
         Exception exception = Assertions.assertThrows(CustomerException.class,
@@ -64,7 +63,6 @@ public class CustomerServiceImplTest {
     void givenValidRequestDTO_whenSaveCustomer_thenReturnSuccess() throws CustomerException {
 
         //GIVEN
-        RequestDTO requestDTO = RequestDTO.builder().customerName("Test").mobileNumber("08763547891").build();
         when(customerDao.insertCustomer(requestDTO)).thenReturn(1);
 
         //WHEN
@@ -72,6 +70,30 @@ public class CustomerServiceImplTest {
 
         //THEN
         assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+
+    }
+
+    @Test
+    void givenInvalidDataSource_whenDeleteCustomer_thenReturnError() throws CustomerException {
+
+        //THEN
+        Exception exception = Assertions.assertThrows(CustomerException.class,
+                () -> underTest.pop("datasource_c"));
+
+        assertTrue(exception.getMessage().contains("Invalid Data Source"));
+    }
+
+    @Test
+    void givenDataSource_whenDeleteCustomer_thenReturnSuccess() throws CustomerException {
+
+        //GIVEN
+        when(customerDao.deleteCustomer()).thenReturn(1);
+
+        //WHEN
+        ResponseEntity<Object> response = underTest.pop(defaultDataSource);
+
+        //THEN
+        assertEquals(response.getStatusCode(), HttpStatus.NO_CONTENT);
 
     }
 }
