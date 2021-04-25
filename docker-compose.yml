@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  customerManagementSystem:
+    image: afrindotimage/customer-management-systems:0.0.1-SNAPSHOT
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    restart: always
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgresql:5432/testdb?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: afi
+      SPRING_DATASOURCE_PASSWORD: root
+    depends_on:
+      - postgresql
+      - db
+    networks:
+      - backend
+
+  postgresql:
+    image: postgres:13.2
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    restart: always
+    environment:
+      POSTGRES_DB: testdb
+      POSTGRES_USER: afi
+      POSTGRES_PASSWORD: root
+    volumes:
+      - $HOME/Desktop/PostgreSql-Snippets/infile:/infile
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  db:
+    image: mysql:5.7
+    container_name: mysql
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: afi
+      MYSQL_PASSWORD: root
+    networks:
+      - backend
+
+volumes:
+  pg_data:
+
+networks:
+  backend:

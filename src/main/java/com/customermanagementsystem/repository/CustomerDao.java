@@ -17,7 +17,8 @@ public interface CustomerDao {
         "INSERT INTO CUSTOMER (CUSTOMER_NAME,MOBILE_NUMBER,COUNTRY) VALUES ( #{customerName}, "
             +"#{mobileNumber},#{country})")
     Integer insertCustomer(final RequestDTO requestDTO);
-
-    @Delete("DELETE FROM CUSTOMER WHERE CUSTOMER_ID in(SELECT MAX(CUSTOMER_ID) FROM CUSTOMER)")
+    
+    @Delete("DELETE FROM CUSTOMER WHERE CUSTOMER_ID = ( SELECT * FROM (SELECT MAX(CUSTOMER_ID) " +
+            "FROM CUSTOMER)AS SUB)")
     Integer deleteCustomer();
 }
